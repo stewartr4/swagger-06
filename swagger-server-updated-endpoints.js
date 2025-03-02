@@ -63,6 +63,10 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const { body, validationResult } = require('express-validator');
+const axios = require("axios");
+
+//AWS Lambda LINK 
+const AWS_LAMBDA_URL = "https://ow5u4ywpme.execute-api.us-east-2.amazonaws.com/say";
 
 // MariaDB connection pool
 const pool = mariadb.createPool({
@@ -98,6 +102,43 @@ const specs = swaggerJsdoc(options);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs)); 
 app.use(cors());
 app.use(express.json()); 
+
+/**
+ * @swagger
+ * /say:
+ *   get:
+ *     summary: "Get a message with your keyword"
+ *     description: "Returns 'Rian Stewart says {keyword}'"
+ *     parameters:
+ *       - name: keyword
+ *         in: query
+ *         required: true
+ *         description: "The word or phrase to include in the response"
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: "Successful response"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rian Stewart says hello"
+ */
+app.get("/say", async (req, res) => {
+  const keyword = req.query.keyword || "nothing";
+
+  // Forward request to AWS Lambda
+  const response = await axios.get(AWS_LAMBDA_URL, {
+      params: { keyword }
+  });
+
+  // Send back response
+  res.json(response.data);
+});
 
 /**
  * @swagger
