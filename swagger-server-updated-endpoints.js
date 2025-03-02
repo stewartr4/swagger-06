@@ -147,19 +147,13 @@ app.post('/student',
 
     const conn = await pool.getConnection();
 
-    try {
-        // Insert the student into the database using 'Class'
-        const result = await conn.query('INSERT INTO student (NAME, TITLE, CLASS, SECTION, ROLLID) VALUES (?, ?, ?, ?, ?)',
+    const result = await conn.query('INSERT INTO student (NAME, TITLE, CLASS, SECTION, ROLLID) VALUES (?, ?, ?, ?, ?)',
             [name, title, studentClass, section, rollid]);
 
-        // Respond with success and the new student ID 
-        res.status(201).json({ message: 'Student added', id: result.insertId });
-    } catch (err) {
-        res.status(500).json({ message: 'Error adding student', error: err });
-    } finally {
-        conn.end(); 
+    res.status(201).json({ message: 'Student added', id: result.insertId });
+    conn.end(); 
     }
-});
+);
 
 /**
  * @swagger
@@ -284,16 +278,11 @@ app.patch('/orders/:id',
     const { ord_amount, advance_amount, ord_date, cust_code, agent_code, ord_description } = req.body;
 
     const conn = await pool.getConnection();
-    try {
-      const result = await conn.query('UPDATE orders SET ORD_AMOUNT = ?, ADVANCE_AMOUNT = ?, ORD_DATE = ?, CUST_CODE = ?, AGENT_CODE = ?, ORD_DESCRIPTION = ? WHERE ORD_NUM = ?',
+    const result = await conn.query('UPDATE orders SET ORD_AMOUNT = ?, ADVANCE_AMOUNT = ?, ORD_DATE = ?, CUST_CODE = ?, AGENT_CODE = ?, ORD_DESCRIPTION = ? WHERE ORD_NUM = ?',
         [ord_amount, advance_amount, ord_date, cust_code, agent_code, ord_description, id]);
-      res.status(200).json({ message: 'Order updated', id: result.insertId });
-    } catch (err) {
-      res.status(500).json({ message: 'Error updating order', error: err });
-    } finally {
-      conn.end();
+    res.status(200).json({ message: 'Order updated', id: result.insertId });
+    conn.end();
     }
-  }
 );
 
 /**
@@ -340,16 +329,12 @@ app.put('/company/:id',
       const { company_name, company_city } = req.body;
   
       const conn = await pool.getConnection();
-      try {
-        const result = await conn.query('UPDATE company SET COMPANY_NAME = ?, COMPANY_CITY = ? WHERE COMPANY_ID = ?',
+      const result = await conn.query('UPDATE company SET COMPANY_NAME = ?, COMPANY_CITY = ? WHERE COMPANY_ID = ?',
           [company_name, company_city, id]);
-        res.status(200).json({ message: 'Company updated', id: result.insertId });
-      } catch (err) {
-        res.status(500).json({ message: 'Error updating company', error: err });
-      } finally {
-        conn.end();
+      res.status(200).json({ message: 'Company updated', id: result.insertId });
+      
+      conn.end();
       }
-    }
   );
 
   /**
@@ -371,20 +356,16 @@ app.put('/company/:id',
 app.delete('/company/:id', async (req, res) => {
     const { id } = req.params;
     const conn = await pool.getConnection();
-    try {
-      const result = await conn.query('DELETE FROM company WHERE COMPANY_ID = ?', [id]);
-      res.status(200).json({ message: 'Company deleted' });
-    } catch (err) {
-      res.status(500).json({ message: 'Error deleting company', error: err });
-    } finally {
-      conn.end();
+    const result = await conn.query('DELETE FROM company WHERE COMPANY_ID = ?', [id]);
+    res.status(200).json({ message: 'Company deleted' });
+    conn.end();
     }
-  });
+  );
   
   // Server running
   app.listen(port, () => {
       console.log(`App running on http://localhost:${port}`);
-      console.log(`Swagger docs available at http://localhost:${port}/docs`);
+      console.log(`Swagger docs available at http://147.182.178.196:${port}/docs`);
   });
   
   
