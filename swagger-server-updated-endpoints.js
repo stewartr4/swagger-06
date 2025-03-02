@@ -52,7 +52,7 @@ app.listen(port, () => {
 
 
 
-//SWAGGER updated server.js code with all new endpoints and swagger docs 
+//SWAGGER updated server.js code with all new endpoints and swagger docs including lambda function and /say GET call
 
 const express = require('express');
 const app = express();
